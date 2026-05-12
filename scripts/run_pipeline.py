@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from datetime import date
 from pathlib import Path
@@ -21,7 +22,11 @@ def main() -> None:
         default=date.today().isoformat(),
         help="Report date (YYYY-MM-DD). Default: today.",
     )
-    parser.add_argument("--skip-pdf", action="store_true", help="Do not run the PDF step.")
+    parser.add_argument(
+        "--skip-pdf",
+        action="store_true",
+        help="Do not run the PDF step even if MD2PDF_CMD or --pdf-cmd is set.",
+    )
     parser.add_argument(
         "--pdf-optional",
         action="store_true",
@@ -40,6 +45,16 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    pdf_configured = bool(
+        (args.pdf_cmd or "").strip() or (os.environ.get("MD2PDF_CMD") or "").strip()
+    )
+    skip_pdf = args.skip_pdf or not pdf_configured
+    if not args.skip_pdf and not pdf_configured:
+        print(
+            "No PDF command configured (set MD2PDF_CMD or pass --pdf-cmd); skipping PDF.",
+            file=sys.stderr,
+        )
+
     sources_path = args.sources
     if sources_path is None:
         explicit = ROOT / "config" / "sources.yaml"
@@ -52,7 +67,7 @@ def main() -> None:
     run_pipeline(
         root=ROOT,
         date_str=args.date,
-        skip_pdf=args.skip_pdf,
+        skip_pdf=skip_pdf,
         pdf_optional=args.pdf_optional,
         pdf_cmd=args.pdf_cmd,
         sources_path=sources_path,

@@ -31,20 +31,22 @@ From the repo root:
 
 ```bash
 source .venv/bin/activate
-python3 scripts/run_pipeline.py --skip-pdf
+python3 scripts/run_pipeline.py
 ```
+
+If **`MD2PDF_CMD`** (or **`--pdf-cmd`**) is not set, the script finishes after Markdown and prints a short notice to stderr. To force skipping PDF even when a command is configured, use **`--skip-pdf`**.
 
 Options:
 
 | Flag | Meaning |
 |------|--------|
 | `--date YYYY-MM-DD` | Report date (default: today) |
-| `--skip-pdf` | Stop after writing Markdown |
+| `--skip-pdf` | Skip PDF even when `MD2PDF_CMD` / `--pdf-cmd` is set |
 | `--pdf-cmd '...'` | PDF command template; use `{input}` and `{output}` placeholders |
 | `--pdf-optional` | If PDF fails, print a warning and exit successfully |
 | `--sources PATH` | Override sources YAML |
 
-PDF command is read from `--pdf-cmd` or the **`MD2PDF_CMD`** environment variable. Example (adjust to match your installed CLI):
+PDF runs only when **`MD2PDF_CMD`** or **`--pdf-cmd`** is set (unless you pass **`--skip-pdf`**). Example (adjust to match your installed CLI):
 
 ```bash
 export MD2PDF_CMD='md2pdf-mermaid {input} -o {output}'
