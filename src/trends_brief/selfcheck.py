@@ -39,6 +39,7 @@ def main() -> int:
             pdf_optional=False,
             pdf_cmd=None,
             sources_path=tmp_root / "config" / "sources.yaml",
+            quiet=True,
         )
         derived = tmp_root / "data" / "derived" / f"{fixed}.json"
         report = tmp_root / "reports" / f"{fixed}.md"

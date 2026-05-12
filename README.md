@@ -34,7 +34,7 @@ source .venv/bin/activate
 python3 scripts/run_pipeline.py
 ```
 
-If **`MD2PDF_CMD`** (or **`--pdf-cmd`**) is not set, the script finishes after Markdown (no PDF, no extra output). Use **`--verbose`** to print why PDF was skipped. To force skipping PDF even when a command is configured, use **`--skip-pdf`**.
+If **`MD2PDF_CMD`** (or **`--pdf-cmd`**) is not set, the script finishes after Markdown; the success summary still lists output paths with **PDF: (not generated)**. Use **`--verbose`** for an extra stderr line about PDF. Use **`--quiet`** / **`-q`** for no summary. To force skipping PDF even when a command is configured, use **`--skip-pdf`**.
 
 Options:
 
@@ -45,7 +45,8 @@ Options:
 | `--pdf-cmd '...'` | PDF command template; use `{input}` and `{output}` placeholders |
 | `--pdf-optional` | If PDF fails, print a warning and exit successfully |
 | `--sources PATH` | Override sources YAML |
-| `-v`, `--verbose` | Print e.g. PDF skip reason |
+| `-v`, `--verbose` | Print e.g. PDF skip reason (stderr) |
+| `-q`, `--quiet` | No success summary on stdout |
 
 PDF runs only when **`MD2PDF_CMD`** or **`--pdf-cmd`** is set (unless you pass **`--skip-pdf`**). Example (adjust to match your installed CLI):
 

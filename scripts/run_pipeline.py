@@ -49,6 +49,12 @@ def main() -> None:
         action="store_true",
         help="Print extra messages (e.g. why PDF was skipped).",
     )
+    parser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        help="Do not print the success summary (paths) on stdout.",
+    )
     args = parser.parse_args()
 
     pdf_configured = bool(
@@ -77,6 +83,7 @@ def main() -> None:
         pdf_optional=args.pdf_optional,
         pdf_cmd=args.pdf_cmd,
         sources_path=sources_path,
+        quiet=args.quiet,
     )
 
 
