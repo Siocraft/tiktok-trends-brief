@@ -43,13 +43,19 @@ def main() -> None:
         default=None,
         help="Path to sources YAML (default: config/sources.yaml if present else built-in stub only).",
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Print extra messages (e.g. why PDF was skipped).",
+    )
     args = parser.parse_args()
 
     pdf_configured = bool(
         (args.pdf_cmd or "").strip() or (os.environ.get("MD2PDF_CMD") or "").strip()
     )
     skip_pdf = args.skip_pdf or not pdf_configured
-    if not args.skip_pdf and not pdf_configured:
+    if args.verbose and not args.skip_pdf and not pdf_configured:
         print(
             "No PDF command configured (set MD2PDF_CMD or pass --pdf-cmd); skipping PDF.",
             file=sys.stderr,
