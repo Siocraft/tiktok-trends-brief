@@ -16,6 +16,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+pdf = ["md2pdf-mermaid>=1.4,<2"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -5,7 +5,7 @@ Local **Python 3** pipeline for a daily-style trend brief: **gather → Markdown
 ## Requirements
 
 - macOS (or any OS with Python **3.11+**)
-- Optional: [md2pdf-mermaid](https://www.npmjs.com/package/md2pdf-mermaid) or another Markdown-to-PDF CLI
+- Optional PDF: PyPI package **[md2pdf-mermaid](https://pypi.org/project/md2pdf-mermaid/)** (installs the **`md2pdf`** CLI; uses Playwright/Chromium for the default HTML engine)
 
 ## Setup
 
@@ -13,8 +13,11 @@ Local **Python 3** pipeline for a daily-style trend brief: **gather → Markdown
 cd /path/to/tiktok
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
+pip install -e ".[dev,pdf]"
+playwright install chromium
 ```
+
+The **`pdf`** extra pulls in `md2pdf-mermaid`. After the first install, run **`playwright install chromium`** once so `md2pdf` can render Mermaid diagrams.
 
 Copy examples and customize:
 
@@ -34,28 +37,32 @@ source .venv/bin/activate
 python3 scripts/run_pipeline.py
 ```
 
-If **`MD2PDF_CMD`** (or **`--pdf-cmd`**) is not set, the script finishes after Markdown; the success summary still lists output paths with **PDF: (not generated)**. Use **`--verbose`** for an extra stderr line about PDF. Use **`--quiet`** / **`-q`** for no summary. To force skipping PDF even when a command is configured, use **`--skip-pdf`**.
+If the **`md2pdf`** executable is on your `PATH` (from `pip install -e ".[pdf]"`), the pipeline **runs PDF by default** using:
+
+`md2pdf {input} -o {output}`
+
+Override with **`MD2PDF_CMD`** or **`--pdf-cmd`** if you use another tool (same `{input}` / `{output}` placeholders, or a single executable name for `tool input -o output`).
+
+Use **`--skip-pdf`** to only generate Markdown. Use **`--verbose`** for PDF skip hints; **`--quiet`** hides the success summary.
 
 Options:
 
 | Flag | Meaning |
 |------|--------|
 | `--date YYYY-MM-DD` | Report date (default: today) |
-| `--skip-pdf` | Skip PDF even when `MD2PDF_CMD` / `--pdf-cmd` is set |
+| `--skip-pdf` | Skip PDF even when `md2pdf` / `MD2PDF_CMD` / `--pdf-cmd` is available |
 | `--pdf-cmd '...'` | PDF command template; use `{input}` and `{output}` placeholders |
 | `--pdf-optional` | If PDF fails, print a warning and exit successfully |
 | `--sources PATH` | Override sources YAML |
 | `-v`, `--verbose` | Print e.g. PDF skip reason (stderr) |
 | `-q`, `--quiet` | No success summary on stdout |
 
-PDF runs only when **`MD2PDF_CMD`** or **`--pdf-cmd`** is set (unless you pass **`--skip-pdf`**). Example (adjust to match your installed CLI):
+Example: force a custom PDF command (rare if `md2pdf` is already default):
 
 ```bash
-export MD2PDF_CMD='md2pdf-mermaid {input} -o {output}'
+export MD2PDF_CMD='md2pdf {input} -o {output}'
 python3 scripts/run_pipeline.py
 ```
-
-If the tool uses different flags, set `MD2PDF_CMD` accordingly.
 
 ## Outputs
 

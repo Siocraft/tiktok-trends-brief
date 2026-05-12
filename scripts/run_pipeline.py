@@ -13,6 +13,7 @@ if SRC.is_dir():
     sys.path.insert(0, str(SRC))
 
 from trends_brief.pipeline import run_pipeline  # noqa: E402
+from trends_brief.pdf import default_pdf_command  # noqa: E402
 
 
 def main() -> None:
@@ -57,13 +58,17 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    pdf_configured = bool(
-        (args.pdf_cmd or "").strip() or (os.environ.get("MD2PDF_CMD") or "").strip()
-    )
+    explicit_pdf = (args.pdf_cmd or "").strip() or (os.environ.get("MD2PDF_CMD") or "").strip()
+    resolved_pdf = explicit_pdf or (default_pdf_command() or "")
+    pdf_configured = bool(resolved_pdf)
     skip_pdf = args.skip_pdf or not pdf_configured
-    if args.verbose and not args.skip_pdf and not pdf_configured:
+
+    if args.verbose and skip_pdf and args.skip_pdf:
+        print("PDF skipped: --skip-pdf.", file=sys.stderr)
+    elif args.verbose and skip_pdf and not explicit_pdf:
         print(
-            "No PDF command configured (set MD2PDF_CMD or pass --pdf-cmd); skipping PDF.",
+            "PDF skipped: md2pdf not on PATH. Install: pip install -e \".[pdf]\" "
+            "then playwright install chromium",
             file=sys.stderr,
         )
 
@@ -81,7 +86,7 @@ def main() -> None:
         date_str=args.date,
         skip_pdf=skip_pdf,
         pdf_optional=args.pdf_optional,
-        pdf_cmd=args.pdf_cmd,
+        pdf_cmd=None if skip_pdf else resolved_pdf,
         sources_path=sources_path,
         quiet=args.quiet,
     )
