@@ -1,0 +1,15 @@
+# Copy to sources.yaml and enable adapters as needed.
+# Each adapter runs in order; outputs land in data/raw/<DATE>/.
+
+adapters:
+  - name: stub
+    enabled: true
+    config: {}
+
+  # Example: fetch JSON from a URL you control (API key in query if allowed).
+  - name: http_json
+    enabled: false
+    config:
+      url: https://httpbin.org/json
+      out_filename: httpbin.json
+      timeout_seconds: 30

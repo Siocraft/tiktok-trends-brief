@@ -1,0 +1,28 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.Python
+.env
+.env.*
+!.env.example
+
+# Local overrides (copy from *.example.*)
+config/persona.yaml
+config/sources.yaml
+
+# Optional: keep generated artifacts out of git
+data/raw/
+data/derived/
+reports/*.md
+reports/pdf/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Build
+*.egg-info/
+dist/
+build/

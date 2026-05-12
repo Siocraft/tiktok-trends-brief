@@ -1,0 +1,53 @@
+# Trend brief — {{ derived.date }}
+
+_Generated at {{ derived.generated_at }}_
+
+## Summary
+
+- **Sources:** {{ derived.sources | join(", ") if derived.sources else "none" }}
+- **Persona:** {{ persona.persona_one_line }}
+- **Niche keywords:** {{ persona.niche_keywords | join(", ") }}
+
+## Top trends
+
+| Score | Type | Title | Notes |
+| ---: | --- | --- | --- |
+{% for t in derived.trends %}
+| {{ t.score | round(2) }} | {{ t.type }} | {{ t.title }} | {{ t.notes | replace("\n", " ") }} |
+{% endfor %}
+
+## Links
+
+{% for t in derived.trends %}
+{% if t.links %}
+### {{ t.title }}
+
+{% for link in t.links %}
+- {{ link }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+{% set ns = namespace(found=false) %}
+{% for t in derived.trends %}
+{% if t.links %}{% set ns.found = true %}{% endif %}
+{% endfor %}
+{% if not ns.found %}
+_No example links in this run. Add adapters or edit raw JSON to include URLs._
+{% endif %}
+
+## Video ideas (template-based)
+
+{% set top = derived.trends[:5] %}
+{% for t in top %}
+- **{{ t.title }}**
+{% for tmpl in persona.idea_templates %}
+  - {{ tmpl.replace("{title}", t.title) }}
+{% endfor %}
+{% endfor %}
+
+## Appendix: derived JSON
+
+```json
+{{ derived_json }}
+```

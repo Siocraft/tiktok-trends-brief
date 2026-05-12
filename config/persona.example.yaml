@@ -1,0 +1,14 @@
+# Copy to persona.yaml (gitignored) and customize for your niche.
+
+niche_keywords:
+  - mom life
+  - baby
+  - day in the life
+  - routines
+
+persona_one_line: "24-year-old mom; 18-month-old; family / lifestyle content."
+
+idea_templates:
+  - "Open with a 2s hook about {title}, then one concrete moment from your day."
+  - "Show a before/after or expectation vs reality tied to {title}."
+  - "Voiceover + B-roll: explain {title} from your POV as a parent."
